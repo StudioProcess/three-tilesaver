@@ -1,7 +1,10 @@
+import * as tilesaver from './tilesaver.js';
+
 const W = 1280;
 const H = 720;
 
 let RENDERING = true;
+let TILES = 2;
 
 let renderer, scene, camera;
 let controls; // eslint-disable-line no-unused-vars
@@ -37,6 +40,8 @@ function setup() {
   let mat = new THREE.MeshBasicMaterial({ color: 0x1e90ff, wireframe: true });
   let cube = new THREE.Mesh( geo, mat );
   scene.add( cube );
+  
+  tilesaver.init(renderer, scene, camera, TILES);
 }
 
 
@@ -52,52 +57,7 @@ document.addEventListener('keydown', e => {
   if (e.key == ' ') {
     console.log('space');
     RENDERING = !RENDERING;
-  } else if (e.key == 's') {
-    saveTiled();
+  } else if (e.key == 'e') {
+    tilesaver.save().then(f => console.log(`Saved to: ${f}`));
   }
 });
-
-
-function saveCanvasBlob(canvas, filename) {
-  canvas.toBlob(blob => {
-    let url = URL.createObjectURL(blob);
-    let link = document.createElement('a');
-    link.download = filename;
-    link.href = url;
-    link.click();
-    URL.revokeObjectURL(url);
-  });
-}
-
-
-let TILES = 2;
-function saveTiled() {
-  // assume rendering is halted
-  
-  let timestamp  = new Date().toISOString();
-  let tileWidth  = renderer.domElement.width;
-  let tileHeight = renderer.domElement.height;
-  let fullWidth  = tileWidth  * TILES;
-  let fullHeight = tileHeight * TILES;
-  console.log(tileWidth, tileHeight, fullWidth, fullHeight);
-  
-  let targetCanvas = document.createElement("canvas");
-  targetCanvas.width = fullWidth;
-  targetCanvas.height = fullHeight;
-  let targetContext = targetCanvas.getContext("2d");
-  
-  for (let ty=0; ty<TILES; ty++) {
-    for (let tx=0; tx<TILES; tx++) {
-      let offsetX = tx * tileWidth;
-      let offsetY = ty * tileHeight;
-      camera.setViewOffset( fullWidth, fullHeight, offsetX, offsetY, tileWidth, tileHeight );
-      renderer.render( scene, camera );
-      // save current tile
-      targetContext.drawImage(renderer.domElement, offsetX, offsetY);
-      // saveCanvas( `${timestamp}_${ty*TILES+tx}.png` );
-    }
-  }
-  
-  camera.clearViewOffset();
-  saveCanvasBlob(targetCanvas, `${timestamp}_${fullWidth}x${fullHeight}.png`);
-}
