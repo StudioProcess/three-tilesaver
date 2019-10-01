@@ -4,7 +4,7 @@ const W = 1280;
 const H = 720;
 
 let RENDERING = true;
-let TILES = 2;
+let TILES = 2; // NOTE: Maximums: Firefox 69: 5, Chrome 77: 8
 
 let renderer, scene, camera;
 let controls; // eslint-disable-line no-unused-vars

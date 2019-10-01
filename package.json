@@ -1,6 +1,6 @@
 {
-  "name": "three-starter",
-  "version": "0.0.1",
+  "name": "three-tilesaver",
+  "version": "0.0.2",
   "description": "",
   "repository": "github:StudioProcess/three-tilesaver",
   "engines": {
@@ -16,9 +16,9 @@
   "author": "Process <contact@process.studio> (https://process.studio)",
   "license": "AGPL-3.0",
   "dependencies": {
-    "three": "^0.89.0"
+    "three": "^0.109.0"
   },
   "devDependencies": {
-    "browser-sync": "^2.23.5"
+    "browser-sync": "^2.26.7"
   }
 }
